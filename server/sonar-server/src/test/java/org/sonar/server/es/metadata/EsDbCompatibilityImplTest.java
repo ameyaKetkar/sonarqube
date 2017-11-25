@@ -19,8 +19,15 @@
  */
 package org.sonar.server.es.metadata;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.Optional;
+import java.util.OptionalLong;
+
 import javax.annotation.Nullable;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -29,10 +36,6 @@ import org.sonar.db.DbClient;
 import org.sonar.server.es.EsTester;
 import org.sonar.server.es.FakeIndexDefinition;
 import org.sonar.server.platform.db.migration.history.MigrationHistory;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class EsDbCompatibilityImplTest {
   @Rule
@@ -141,7 +144,8 @@ public class EsDbCompatibilityImplTest {
 
   private void prepareDb(String dbVendor, @Nullable Long dbSchemaVersion) {
     when(dbClient.getDatabase().getDialect().getId()).thenReturn(dbVendor);
-    when(migrationHistory.getLastMigrationNumber()).thenReturn(Optional.ofNullable(dbSchemaVersion));
+    when(migrationHistory.getLastMigrationNumber()).thenReturn(Optional.ofNullable(dbSchemaVersion).map(OptionalLong::of)
+    					.orElseGet(OptionalLong::empty));
   }
 
   private void prepareEs(String dbVendor, long dbSchemaVersion) {

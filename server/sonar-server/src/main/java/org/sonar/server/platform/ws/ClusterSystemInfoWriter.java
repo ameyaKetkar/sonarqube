@@ -20,6 +20,7 @@
 package org.sonar.server.platform.ws;
 
 import java.util.Collection;
+
 import org.sonar.api.utils.text.JsonWriter;
 import org.sonar.server.health.ClusterHealth;
 import org.sonar.server.health.HealthChecker;
@@ -28,6 +29,8 @@ import org.sonar.server.platform.monitoring.cluster.GlobalInfoLoader;
 import org.sonar.server.platform.monitoring.cluster.NodeInfo;
 import org.sonar.server.platform.monitoring.cluster.SearchNodesInfoLoader;
 import org.sonar.server.telemetry.TelemetryDataLoader;
+
+import com.google.common.base.Optional;
 
 public class ClusterSystemInfoWriter extends SystemInfoWriter {
   private final GlobalInfoLoader globalInfoLoader;

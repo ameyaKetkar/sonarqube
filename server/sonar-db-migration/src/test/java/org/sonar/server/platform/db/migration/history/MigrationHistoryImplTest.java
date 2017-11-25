@@ -31,6 +31,7 @@ import org.sonar.server.platform.db.migration.step.MigrationStep;
 import org.sonar.server.platform.db.migration.step.RegisteredMigrationStep;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 public class MigrationHistoryImplTest {
   @Rule
@@ -54,7 +55,7 @@ public class MigrationHistoryImplTest {
   public void getLastMigrationNumber_returns_last_version_assuming_version_are_only_number() throws SQLException {
     insert(12, 5, 30, 8);
 
-    assertThat(underTest.getLastMigrationNumber()).contains(30L);
+    assertEquals(underTest.getLastMigrationNumber().getAsLong(),30);
   }
 
   @Test
@@ -68,7 +69,7 @@ public class MigrationHistoryImplTest {
   public void done_adds_migration_number_to_table() {
     underTest.done(new RegisteredMigrationStep(12, "aa", MigrationStep.class));
 
-    assertThat(underTest.getLastMigrationNumber()).contains(12L);
+    assertEquals(underTest.getLastMigrationNumber().getAsLong(),12);
   }
 
   private void insert(int... versions) throws SQLException {

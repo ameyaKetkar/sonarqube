@@ -22,7 +22,10 @@ package org.sonar.server.platform.monitoring.cluster;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
+
 import javax.annotation.Nullable;
+
 import org.sonar.process.systeminfo.protobuf.ProtobufSystemInfo;
 
 /**

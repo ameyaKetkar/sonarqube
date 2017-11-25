@@ -20,6 +20,7 @@
 package org.sonar.server.webhook;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 

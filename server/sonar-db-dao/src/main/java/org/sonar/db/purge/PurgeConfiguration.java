@@ -23,6 +23,10 @@ import com.google.common.annotations.VisibleForTesting;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalInt;
+import java.util.OptionalInt;
+import java.util.OptionalInt;
 import javax.annotation.CheckForNull;
 import org.apache.commons.lang.time.DateUtils;
 import org.sonar.api.config.Configuration;
@@ -35,12 +39,12 @@ public class PurgeConfiguration {
   private final IdUuidPair rootProjectIdUuid;
   private final String[] scopesWithoutHistoricalData;
   private final int maxAgeInDaysOfClosedIssues;
-  private final Optional<Integer> maxAgeInDaysOfInactiveShortLivingBranches;
+  private final OptionalInt maxAgeInDaysOfInactiveShortLivingBranches;
   private final System2 system2;
   private final Collection<String> disabledComponentUuids;
 
   public PurgeConfiguration(IdUuidPair rootProjectId, String[] scopesWithoutHistoricalData, int maxAgeInDaysOfClosedIssues,
-    Optional<Integer> maxAgeInDaysOfInactiveShortLivingBranches, System2 system2, Collection<String> disabledComponentUuids) {
+    OptionalInt maxAgeInDaysOfInactiveShortLivingBranches, System2 system2, Collection<String> disabledComponentUuids) {
     this.rootProjectIdUuid = rootProjectId;
     this.scopesWithoutHistoricalData = scopesWithoutHistoricalData;
     this.maxAgeInDaysOfClosedIssues = maxAgeInDaysOfClosedIssues;
@@ -54,7 +58,7 @@ public class PurgeConfiguration {
     if (config.getBoolean(PurgeConstants.PROPERTY_CLEAN_DIRECTORY).orElse(false)) {
       scopes = new String[] {Scopes.DIRECTORY, Scopes.FILE};
     }
-    return new PurgeConfiguration(idUuidPair, scopes, config.getInt(PurgeConstants.DAYS_BEFORE_DELETING_CLOSED_ISSUES).get(),
+    return new PurgeConfiguration(idUuidPair, scopes, config.getInt(PurgeConstants.DAYS_BEFORE_DELETING_CLOSED_ISSUES).getAsInt(),
       config.getInt(PurgeConstants.DAYS_BEFORE_DELETING_INACTIVE_SHORT_LIVING_BRANCHES), System2.INSTANCE, disabledComponentUuids);
   }
 
@@ -76,7 +80,7 @@ public class PurgeConfiguration {
   }
 
   public Optional<Date> maxLiveDateOfInactiveShortLivingBranches() {
-    return maxAgeInDaysOfInactiveShortLivingBranches.map(age -> DateUtils.addDays(new Date(system2.now()), -age));
+    return Optional.of(maxAgeInDaysOfInactiveShortLivingBranches.getAsInt()).map(age -> DateUtils.addDays(new Date(system2.now()), -age));
   }
 
   @VisibleForTesting

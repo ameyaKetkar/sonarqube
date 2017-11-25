@@ -19,29 +19,6 @@
  */
 package org.sonar.server.platform.ws;
 
-import com.google.common.collect.ImmutableList;
-import com.tngtech.java.junit.dataprovider.DataProvider;
-import com.tngtech.java.junit.dataprovider.DataProviderRunner;
-import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
-import javax.annotation.Nullable;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.sonar.api.server.ws.Request;
-import org.sonar.api.utils.DateUtils;
-import org.sonar.db.Database;
-import org.sonar.db.dialect.Dialect;
-import org.sonar.server.platform.db.migration.DatabaseMigration;
-import org.sonar.server.platform.db.migration.DatabaseMigrationState.Status;
-import org.sonar.server.platform.db.migration.version.DatabaseVersion;
-import org.sonar.server.platform.db.migration.DatabaseMigrationState;
-import org.sonar.server.ws.WsTester;
-
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
@@ -54,6 +31,32 @@ import static org.sonar.server.platform.db.migration.DatabaseMigrationState.Stat
 import static org.sonar.server.platform.db.migration.DatabaseMigrationState.Status.RUNNING;
 import static org.sonar.server.platform.db.migration.DatabaseMigrationState.Status.SUCCEEDED;
 import static org.sonar.test.JsonAssert.assertJson;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.OptionalLong;
+
+import javax.annotation.Nullable;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.sonar.api.server.ws.Request;
+import org.sonar.api.utils.DateUtils;
+import org.sonar.db.Database;
+import org.sonar.db.dialect.Dialect;
+import org.sonar.server.platform.db.migration.DatabaseMigration;
+import org.sonar.server.platform.db.migration.DatabaseMigrationState;
+import org.sonar.server.platform.db.migration.DatabaseMigrationState.Status;
+import org.sonar.server.platform.db.migration.version.DatabaseVersion;
+import org.sonar.server.ws.WsTester;
+
+import com.google.common.collect.ImmutableList;
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 
 @RunWith(DataProviderRunner.class)
 public class MigrateDbActionTest {
@@ -88,13 +91,13 @@ public class MigrateDbActionTest {
   @Before
   public void wireMocksTogether() {
     when(database.getDialect()).thenReturn(dialect);
-    when(databaseVersion.getVersion()).thenReturn(Optional.of(150L));
+    when(databaseVersion.getVersion()).thenReturn(OptionalLong.of(150L));
   }
 
   @Test
   public void ISE_is_thrown_when_version_can_not_be_retrieved_from_database() throws Exception {
     reset(databaseVersion);
-    when(databaseVersion.getVersion()).thenReturn(Optional.empty());
+    when(databaseVersion.getVersion()).thenReturn(OptionalLong.empty());
 
     expectedException.expect(IllegalStateException.class);
     expectedException.expectMessage("Cannot connect to Database.");

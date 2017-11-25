@@ -20,10 +20,11 @@
 package org.sonar.db.qualitygate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.OptionalLong;
 import org.junit.Rule;
 import org.junit.Test;
 import org.sonar.api.utils.System2;
@@ -91,7 +92,7 @@ public class ProjectQgateAssociationDaoTest {
   public void select_qgate_id_is_absent() {
     ComponentDto project = db.components().insertPrivateProject();
 
-    Optional<Long> result = underTest.selectQGateIdByComponentId(dbSession, project.getId());
+    OptionalLong result = underTest.selectQGateIdByComponentId(dbSession, project.getId());
 
     assertThat(result.isPresent()).isFalse();
   }
@@ -101,9 +102,9 @@ public class ProjectQgateAssociationDaoTest {
     associateProjectToQualityGate(10L, 1L);
     associateProjectToQualityGate(11L, 2L);
 
-    Optional<Long> result = underTest.selectQGateIdByComponentId(dbSession, 10L);
+    OptionalLong result = underTest.selectQGateIdByComponentId(dbSession, 10L);
 
-    assertThat(result).contains(1L);
+    assertEquals(result.getAsLong(),1);
   }
 
   private void associateProjectToQualityGate(long componentId, long qualityGateId) {

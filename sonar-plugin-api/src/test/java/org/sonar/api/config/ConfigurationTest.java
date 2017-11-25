@@ -45,28 +45,27 @@ public class ConfigurationTest {
   public void getInt() {
     int value = new Random().nextInt();
 
-    verifySupportHeadAndOrTrailingWhitespaces(value, Configuration::getInt);
+    verifySupportHeadAndOrTrailingWhitespaces(value, (c,s)->Optional.of(c.getInt(s)));
   }
 
   @Test
   public void getLong() {
     long value = new Random().nextLong();
 
-    verifySupportHeadAndOrTrailingWhitespaces(value, Configuration::getLong);
+    verifySupportHeadAndOrTrailingWhitespaces(value, (c,s)->Optional.of(c.getLong(s)));
   }
 
   @Test
   public void getFloat() {
     float value = new Random().nextFloat();
-
     verifySupportHeadAndOrTrailingWhitespaces(value, Configuration::getFloat);
+    
   }
 
   @Test
   public void getDouble() {
     double value = new Random().nextDouble();
-
-    verifySupportHeadAndOrTrailingWhitespaces(value, Configuration::getDouble);
+    verifySupportHeadAndOrTrailingWhitespaces(value, (c,s)->Optional.of(c.getDouble(s)));
   }
 
   private <T> void verifySupportHeadAndOrTrailingWhitespaces(T value, BiFunction<Configuration, String, Optional<T>> t) {

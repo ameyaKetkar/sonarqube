@@ -19,15 +19,16 @@
  */
 package org.sonar.server.platform;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.OptionalLong;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.server.platform.db.migration.step.MigrationSteps;
 import org.sonar.server.platform.db.migration.version.DatabaseVersion;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DefaultServerUpgradeStatusTest {
   private static final long LAST_VERSION = 150;
@@ -43,7 +44,7 @@ public class DefaultServerUpgradeStatusTest {
   @Test
   public void shouldBeFreshInstallation() {
     when(migrationSteps.getMaxMigrationNumber()).thenReturn(150L);
-    when(dbVersion.getVersion()).thenReturn(Optional.empty());
+    when(dbVersion.getVersion()).thenReturn(OptionalLong.empty());
 
     underTest.start();
 
@@ -54,7 +55,7 @@ public class DefaultServerUpgradeStatusTest {
 
   @Test
   public void shouldBeUpgraded() {
-    when(dbVersion.getVersion()).thenReturn(Optional.of(50L));
+    when(dbVersion.getVersion()).thenReturn(OptionalLong.of(50L));
 
     underTest.start();
 
@@ -65,7 +66,7 @@ public class DefaultServerUpgradeStatusTest {
 
   @Test
   public void shouldNotBeUpgraded() {
-    when(dbVersion.getVersion()).thenReturn(Optional.of(LAST_VERSION));
+    when(dbVersion.getVersion()).thenReturn(OptionalLong.of(LAST_VERSION));
 
     underTest.start();
 

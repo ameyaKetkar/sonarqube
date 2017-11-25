@@ -19,7 +19,12 @@
  */
 package org.sonar.server.platform;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.OptionalLong;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -27,10 +32,6 @@ import org.sonar.api.utils.MessageException;
 import org.sonar.api.utils.log.LogTester;
 import org.sonar.api.utils.log.LoggerLevel;
 import org.sonar.server.platform.db.migration.version.DatabaseVersion;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DatabaseServerCompatibilityTest {
 
@@ -56,7 +57,7 @@ public class DatabaseServerCompatibilityTest {
 
     DatabaseVersion version = mock(DatabaseVersion.class);
     when(version.getStatus()).thenReturn(DatabaseVersion.Status.REQUIRES_UPGRADE);
-    when(version.getVersion()).thenReturn(Optional.of(12L));
+    when(version.getVersion()).thenReturn(OptionalLong.of(12L));
     new DatabaseServerCompatibility(version).start();
   }
 
@@ -64,7 +65,7 @@ public class DatabaseServerCompatibilityTest {
   public void log_warning_if_requires_upgrade() {
     DatabaseVersion version = mock(DatabaseVersion.class);
     when(version.getStatus()).thenReturn(DatabaseVersion.Status.REQUIRES_UPGRADE);
-    when(version.getVersion()).thenReturn(Optional.of(DatabaseVersion.MIN_UPGRADE_VERSION));
+    when(version.getVersion()).thenReturn(OptionalLong.of(DatabaseVersion.MIN_UPGRADE_VERSION));
     new DatabaseServerCompatibility(version).start();
 
     assertThat(logTester.logs()).hasSize(2);

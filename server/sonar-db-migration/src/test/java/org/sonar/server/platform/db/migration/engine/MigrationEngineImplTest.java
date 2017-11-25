@@ -19,8 +19,13 @@
  */
 package org.sonar.server.platform.db.migration.engine;
 
-import java.util.Optional;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.OptionalLong;
 import java.util.stream.Stream;
+
 import org.junit.Test;
 import org.sonar.core.platform.ComponentContainer;
 import org.sonar.server.platform.db.migration.history.MigrationHistory;
@@ -28,10 +33,6 @@ import org.sonar.server.platform.db.migration.step.MigrationStep;
 import org.sonar.server.platform.db.migration.step.MigrationSteps;
 import org.sonar.server.platform.db.migration.step.MigrationStepsExecutor;
 import org.sonar.server.platform.db.migration.step.RegisteredMigrationStep;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class MigrationEngineImplTest {
   private MigrationHistory migrationHistory = mock(MigrationHistory.class);
@@ -49,7 +50,7 @@ public class MigrationEngineImplTest {
 
   @Test
   public void execute_execute_all_steps_of_there_is_no_last_migration_number() {
-    when(migrationHistory.getLastMigrationNumber()).thenReturn(Optional.empty());
+    when(migrationHistory.getLastMigrationNumber()).thenReturn(OptionalLong.empty());
     Stream<RegisteredMigrationStep> steps = Stream.of(new RegisteredMigrationStep(1, "doo", MigrationStep.class));
     when(migrationSteps.readAll()).thenReturn(steps);
 
@@ -61,7 +62,7 @@ public class MigrationEngineImplTest {
 
   @Test
   public void execute_execute_steps_from_last_migration_number_plus_1() {
-    when(migrationHistory.getLastMigrationNumber()).thenReturn(Optional.of(50L));
+    when(migrationHistory.getLastMigrationNumber()).thenReturn(OptionalLong.of(50L));
     Stream<RegisteredMigrationStep> steps = Stream.of(new RegisteredMigrationStep(1, "doo", MigrationStep.class));
     when(migrationSteps.readFrom(51)).thenReturn(steps);
 
